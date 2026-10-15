@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": ["CKC", "CXC", "CCC"],
+  "key": {
+    "C": "minecraft:copper_ingot",
+    "K": "minecraft:clock",
+    "X": "minecraft:chest"
+  },
+  "result": { "id": "timecapsule:time_capsule", "count": 1 }
+}

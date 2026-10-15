@@ -25,6 +25,15 @@ This project uses [Stonecraft](https://stonecraft.meza.gg) to build for Fabric, 
 
 Loader and API versions live in `versions/dependencies/<minecraft>.properties`, together with the Minecraft range each jar declares.
 
+## How the capsule works
+
+1. Placing a Time Capsule makes you its owner and opens the setup screen.
+2. Choose **Real-world days** or **In-game days**, set the number of days, add items and written books, then press **Seal capsule**.
+3. While sealed, right-clicking shows the time left, and the capsule can't be broken in survival.
+4. Once the time is up, the next right-click opens it (optionally announced in chat) and it works like a normal chest.
+
+Settings live in `config/timecapsule.properties`: default timer mode, default and maximum days, and the open announcement.
+
 ## Requirements
 
 - JDK 25

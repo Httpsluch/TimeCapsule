@@ -15,6 +15,29 @@ val awFile =
         },
     )
 
+// Data pack formats changed in 1.21 (singular folder names) and 1.21.2 (string recipe ingredients),
+// so each era ships its own copy from src/main/data-eras/<era>.
+val dataEra =
+    when {
+        stonecutter.current.parsed >= "1.21.2" -> "1.21.2"
+        stonecutter.current.parsed >= "1.21" -> "1.21"
+        else -> "1.20"
+    }
+extensions.getByType<SourceSetContainer>().named("main") {
+    resources.srcDir(rootProject.file("src/main/data-eras/$dataEra"))
+}
+
+// Ship only the access widener for this jar's era.
+tasks.named<ProcessResources>("processResources") {
+    exclude(
+        if (stonecutter.current.parsed >= "26.1") {
+            "timecapsule-obfuscated.accesswidener"
+        } else {
+            "timecapsule-unobfuscated.accesswidener"
+        },
+    )
+}
+
 modSettings {
     accessWidenerLocation = awFile
 

@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "sealed=false": { "model": "timecapsule:block/time_capsule" },
+    "sealed=true": { "model": "timecapsule:block/time_capsule_sealed" }
+  }
+}

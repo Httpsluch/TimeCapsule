@@ -48,3 +48,4 @@ replay_*.log
 
 # local build logs
 build-log.txt
+launch-*.log

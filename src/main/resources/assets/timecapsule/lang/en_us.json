@@ -1,0 +1,20 @@
+{
+  "block.timecapsule.time_capsule": "Time Capsule",
+  "gui.timecapsule.mode": "Timer: %s",
+  "gui.timecapsule.mode.real_world": "Real-world days",
+  "gui.timecapsule.mode.in_game": "In-game days",
+  "gui.timecapsule.days.one": "1 day",
+  "gui.timecapsule.days.many": "%s days",
+  "gui.timecapsule.seal": "Seal capsule",
+  "gui.timecapsule.opened": "This capsule is open.",
+  "gui.timecapsule.sealed": "This capsule is sealed.",
+  "gui.timecapsule.waiting": "Not sealed yet.",
+  "gui.timecapsule.sealed_for": "Sealed for %s",
+  "message.timecapsule.not_owner": "Only %s can set up this capsule.",
+  "message.timecapsule.locked": "Sealed. Opens in %s.",
+  "message.timecapsule.locked_in_game": "Sealed. Opens in %s of in-game time.",
+  "message.timecapsule.sealed": "Time Capsule sealed for %s (%s).",
+  "message.timecapsule.announce": "%s opened %s's Time Capsule after %s (%s)!",
+  "time.timecapsule.dhm": "%sd %sh %sm",
+  "time.timecapsule.under_minute": "less than a minute"
+}

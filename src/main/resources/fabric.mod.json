@@ -18,6 +18,9 @@
   "entrypoints": {
     "main": [
       "${group}.${id}.TimeCapsule"
+    ],
+    "client": [
+      "${group}.${id}.client.TimeCapsuleClient"
     ]
   },
   "depends": {

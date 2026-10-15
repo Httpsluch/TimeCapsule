@@ -17,6 +17,13 @@ One Stonecraft (Stonecutter + Architectury Loom) workspace builds 14 jars: Fabri
 - Never hand-edit the `stonecutter active` line in `stonecutter.gradle.kts`; switch versions with Stonecutter's tasks.
 - 26.1+ is unobfuscated: names follow Mojang mappings everywhere. Two access wideners split by era sit at the resources root; see the README.
 
+## Where things live
+
+- `TimeCapsuleContent` registers everything through a per-loader `platform/*Registrar`; `TimeCapsule` is each loader's entrypoint.
+- `block/CapsuleBlockEntity` holds the items, owner and timer; `menu/CapsuleMenu` and `client/CapsuleScreen` are the setup screen. Screen buttons use the vanilla menu-button packet (ids in `CapsuleBlockEntity.BUTTON_*`).
+- Data files (recipe, loot table, tags) live in `src/main/data-eras/<era>` because their format changed in 1.21 and 1.21.2. Assets in `src/main/resources` are shared.
+- Settings: `config/timecapsule.properties`, read by `TimeCapsuleConfig` at startup.
+
 ## Design rules (the mod must run well on low-end PCs)
 
 - No per-tick work: block entities must not tick. Check the unlock time only when a player interacts.
