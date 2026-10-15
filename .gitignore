@@ -52,3 +52,9 @@ launch-*.log
 server-*.log
 rcon-*.log
 publish-dryrun.log
+
+# Local-only files: kept on disk, not in the repo
+CLAUDE.md
+AGENTS.md
+CONTRIBUTING.md
+branding/
