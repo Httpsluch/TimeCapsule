@@ -50,4 +50,5 @@ replay_*.log
 build-log.txt
 launch-*.log
 server-*.log
+rcon-*.log
 publish-dryrun.log

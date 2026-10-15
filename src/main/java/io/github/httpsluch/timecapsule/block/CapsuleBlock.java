@@ -27,7 +27,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 /**
  * The capsule block, a chest-sized box facing the player who placed it. Logic lives in
  * {@link CapsuleBlockEntity}; the block only routes interactions to it. SEALED is a block state
- * so clients know a capsule can't be broken, and so the model can show the padlock.
+ * so the model can show the padlock and glowing clock.
  * <p>
  * The facing property is used through {@link BlockStateProperties#HORIZONTAL_FACING} directly
  * because its Java type changed in 26.1.
@@ -96,13 +96,37 @@ public class CapsuleBlock extends BaseEntityBlock {
         }
     }
 
-    /** A sealed capsule can't be broken in survival until someone opens it. */
+    /**
+     * Anyone can break a capsule, but it drops as an item that keeps its items, owner and timer, so a
+     * sealed capsule stays sealed. Going through getDrops covers players and modded block breakers alike.
+     */
     @Override
-    public float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) {
-        if (state.getValue(SEALED) && !player.isCreative()) {
-            return 0.0F;
+    public java.util.List<ItemStack> getDrops(BlockState state, net.minecraft.world.level.storage.loot.LootParams.Builder params) {
+        if (params.getOptionalParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.BLOCK_ENTITY) instanceof CapsuleBlockEntity capsule) {
+            return java.util.List.of(capsule.toItem());
         }
-        return super.getDestroyProgress(state, player, level, pos);
+        return super.getDrops(state, params);
+    }
+
+    // Creative mode gets no drops, so keep a capsule's data the way shulker boxes do.
+    //? if >=1.21 {
+    @Override
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        dropForCreative(level, pos, player);
+        return super.playerWillDestroy(level, pos, state, player);
+    }
+    //?} else {
+    /*@Override
+    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        dropForCreative(level, pos, player);
+        super.playerWillDestroy(level, pos, state, player);
+    }
+    *///?}
+
+    private static void dropForCreative(Level level, BlockPos pos, Player player) {
+        if (!level.isClientSide() && player.isCreative() && level.getBlockEntity(pos) instanceof CapsuleBlockEntity capsule && capsule.hasDataToKeep()) {
+            Block.popResource(level, pos, capsule.toItem());
+        }
     }
 
     //? if >=1.21 {
@@ -128,15 +152,4 @@ public class CapsuleBlock extends BaseEntityBlock {
         /*return InteractionResult.sidedSuccess(level.isClientSide());
         *///?}
     }
-
-    // 26.1+ drops the contents from CapsuleBlockEntity#preRemoveSideEffects instead.
-    //? if <26.1 {
-    /*@Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
-        if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof CapsuleBlockEntity capsule) {
-            capsule.dropContents(level, pos);
-        }
-        super.onRemove(state, level, pos, newState, moved);
-    }
-    *///?}
 }

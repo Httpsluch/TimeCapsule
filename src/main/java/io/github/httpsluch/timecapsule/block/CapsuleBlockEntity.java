@@ -12,7 +12,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -87,10 +86,13 @@ public class CapsuleBlockEntity extends BlockEntity implements MenuProvider {
 
     // ---- Interaction -------------------------------------------------------------------------
 
-    /** Placing a capsule makes the placer its owner and opens the setup screen right away. */
+    /**
+     * Placing a new capsule makes the placer its owner and opens the setup screen right away.
+     * A capsule placed back down from its item keeps its owner and timer; only its look is restored.
+     */
     public void onPlaced(ServerPlayer player) {
-        // A creative-mode copy (pick block with data) can carry a sealed or opened state; leave those alone.
         if (state != STATE_SETUP) {
+            setSealedState(state == STATE_SEALED);
             return;
         }
         owner = player.getUUID();
@@ -252,19 +254,34 @@ public class CapsuleBlockEntity extends BlockEntity implements MenuProvider {
         };
     }
 
-    public void dropContents(Level level, BlockPos pos) {
-        Containers.dropContents(level, pos, items);
+    // ---- Breaking ----------------------------------------------------------------------------
+
+    /** Whether the dropped item must carry this capsule's data (a fresh, empty capsule drops plain). */
+    public boolean hasDataToKeep() {
+        return state != STATE_SETUP || !items.isEmpty();
     }
 
-    //? if >=26.1 {
-    @Override
-    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
-        super.preRemoveSideEffects(pos, state);
-        if (level != null) {
-            dropContents(level, pos);
+    /**
+     * The capsule as an item that keeps its items, owner and timer, like a shulker box.
+     * A sealed capsule therefore stays sealed wherever it's carried.
+     */
+    public ItemStack toItem() {
+        ItemStack stack = new ItemStack(TimeCapsuleContent.ITEM.get());
+        if (!hasDataToKeep() || level == null) {
+            return stack;
         }
+        //? if >=26.1 {
+        net.minecraft.world.level.storage.TagValueOutput output = net.minecraft.world.level.storage.TagValueOutput
+            .createWithContext(net.minecraft.util.ProblemReporter.DISCARDING, level.registryAccess());
+        saveCustomOnly(output);
+        net.minecraft.world.item.BlockItem.setBlockEntityData(stack, getType(), output);
+        //?} elif >=1.21 {
+        /*net.minecraft.world.item.BlockItem.setBlockEntityData(stack, getType(), saveCustomOnly(level.registryAccess()));
+        *///?} else {
+        /*net.minecraft.world.item.BlockItem.setBlockEntityData(stack, getType(), saveWithoutMetadata());
+        *///?}
+        return stack;
     }
-    //?}
 
     private static void overlay(ServerPlayer player, Component message) {
         //? if >=26.1 {

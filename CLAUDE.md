@@ -20,7 +20,8 @@ One Stonecraft (Stonecutter + Architectury Loom) workspace builds 14 jars: Fabri
 ## Where things live
 
 - `TimeCapsuleContent` registers everything through a per-loader `platform/*Registrar`; `TimeCapsule` is each loader's entrypoint.
-- `block/CapsuleBlockEntity` holds the items, owner and timer; `menu/CapsuleMenu` and `client/CapsuleScreen` are the setup screen. Screen buttons use the vanilla menu-button packet (ids in `CapsuleBlockEntity.BUTTON_*`).
+- `block/CapsuleBlockEntity` holds the items, owner and timer; `menu/CapsuleMenu` and `client/CapsuleScreen` are the setup screen.
+- Breaking keeps everything (shulker-style): `CapsuleBlock#getDrops` returns `CapsuleBlockEntity#toItem()`, which stores the block entity data on the item; vanilla `BlockItem` restores it on placement. `block/CapsuleItem` shows the open date/time in its tooltip; in-game time comes from `TimeCapsule.clientWorldTime`, which the client entrypoint sets. Screen buttons use the vanilla menu-button packet (ids in `CapsuleBlockEntity.BUTTON_*`).
 - Data files (recipe, loot table, tags) live in `src/main/data-eras/<era>` because their format changed in 1.21 and 1.21.2. Assets in `src/main/resources` are shared.
 - Settings: `config/timecapsule.properties`, read by `TimeCapsuleConfig` at startup.
 

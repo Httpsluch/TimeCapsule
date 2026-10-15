@@ -2,6 +2,7 @@ package io.github.httpsluch.timecapsule;
 
 import io.github.httpsluch.timecapsule.block.CapsuleBlock;
 import io.github.httpsluch.timecapsule.block.CapsuleBlockEntity;
+import io.github.httpsluch.timecapsule.block.CapsuleItem;
 import io.github.httpsluch.timecapsule.menu.CapsuleMenu;
 import io.github.httpsluch.timecapsule.platform.Registrar;
 import java.util.function.Supplier;
@@ -29,7 +30,7 @@ public final class TimeCapsuleContent {
 
     public static void register(Registrar registrar) {
         BLOCK = registrar.register(BuiltInRegistries.BLOCK, "time_capsule", key -> new CapsuleBlock(blockProperties(key)));
-        ITEM = registrar.register(BuiltInRegistries.ITEM, "time_capsule", key -> new BlockItem(BLOCK.get(), itemProperties(key)));
+        ITEM = registrar.register(BuiltInRegistries.ITEM, "time_capsule", key -> new CapsuleItem(BLOCK.get(), itemProperties(key)));
         BLOCK_ENTITY = registrar.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, "time_capsule", key -> blockEntityType());
         MENU = registrar.register(BuiltInRegistries.MENU, "time_capsule", key -> new MenuType<CapsuleMenu>(CapsuleMenu::new, FeatureFlags.VANILLA_SET));
     }

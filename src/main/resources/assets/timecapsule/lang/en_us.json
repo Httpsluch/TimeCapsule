@@ -16,5 +16,13 @@
   "message.timecapsule.sealed": "Time Capsule sealed for %s (%s).",
   "message.timecapsule.announce": "%s opened %s's Time Capsule after %s (%s)!",
   "time.timecapsule.dhm": "%sd %sh %sm",
-  "time.timecapsule.under_minute": "less than a minute"
+  "time.timecapsule.under_minute": "less than a minute",
+  "tooltip.timecapsule.not_sealed": "Not sealed yet",
+  "tooltip.timecapsule.sealed_by": "Sealed by %s",
+  "tooltip.timecapsule.opened": "Already opened",
+  "tooltip.timecapsule.opens_at": "Opens %s",
+  "tooltip.timecapsule.opens_in_game": "Opens in %s of in-game time",
+  "tooltip.timecapsule.opens_after": "Opens after %s of in-game time",
+  "tooltip.timecapsule.ready": "Ready to open!",
+  "tooltip.timecapsule.secret": "What's inside stays secret until it opens"
 }

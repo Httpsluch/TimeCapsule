@@ -118,9 +118,10 @@ public class CapsuleMenu extends AbstractContainerMenu {
             super(container, index, x, y);
         }
 
+        /** Capsules can't go inside capsules, which would allow endless nesting (as with shulker boxes). */
         @Override
         public boolean mayPlace(ItemStack stack) {
-            return isUnlocked();
+            return isUnlocked() && !(stack.getItem() instanceof io.github.httpsluch.timecapsule.block.CapsuleItem);
         }
 
         @Override

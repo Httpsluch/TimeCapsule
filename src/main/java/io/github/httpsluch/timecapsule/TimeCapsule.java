@@ -38,6 +38,13 @@ public class TimeCapsule /*? if fabric {*/ implements ModInitializer /*?}*/ {
     public static final String MOD_ID = "timecapsule";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
+    /**
+     * Current overworld time on the client, set by the client entrypoint; null on servers.
+     * Returns Long.MIN_VALUE while no world is loaded. Lets item tooltips show in-game time left
+     * without common code touching client classes.
+     */
+    public static volatile java.util.function.LongSupplier clientWorldTime;
+
     //? if >=26.1 {
     public static net.minecraft.resources.Identifier id(String path) {
         return net.minecraft.resources.Identifier.fromNamespaceAndPath(MOD_ID, path);
