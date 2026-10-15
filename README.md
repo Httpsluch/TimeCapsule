@@ -27,7 +27,15 @@ Loader and API versions live in `versions/dependencies/<minecraft>.properties`, 
 
 ## How the capsule works
 
-1. Placing a Time Capsule makes you its owner and opens the setup screen.
+Craft it from 7 iron ingots, a clock and a chest:
+
+```text
+iron   clock  iron
+iron   chest  iron
+iron   iron   iron
+```
+
+1. Placing a Time Capsule makes you its owner and opens the setup screen. It faces you, like a chest.
 2. Choose **Real-world days** or **In-game days**, set the number of days, add items and written books, then press **Seal capsule**.
 3. While sealed, right-clicking shows the time left, and the capsule can't be broken in survival.
 4. Once the time is up, the next right-click opens it (optionally announced in chat) and it works like a normal chest.

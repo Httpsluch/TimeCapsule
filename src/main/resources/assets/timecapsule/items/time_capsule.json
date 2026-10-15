@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "timecapsule:block/time_capsule"
+    "model": "timecapsule:block/time_capsule_sealed"
   }
 }

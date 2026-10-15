@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "misc",
-  "pattern": ["CKC", "CXC", "CCC"],
+  "pattern": ["IKI", "IXI", "III"],
   "key": {
-    "C": { "item": "minecraft:copper_ingot" },
+    "I": { "item": "minecraft:iron_ingot" },
     "K": { "item": "minecraft:clock" },
     "X": { "item": "minecraft:chest" }
   },

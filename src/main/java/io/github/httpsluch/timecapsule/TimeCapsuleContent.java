@@ -36,10 +36,10 @@ public final class TimeCapsuleContent {
 
     private static BlockBehaviour.Properties blockProperties(ResourceKey<Block> key) {
         BlockBehaviour.Properties properties = BlockBehaviour.Properties.of()
-            .mapColor(MapColor.COLOR_ORANGE)
-            .strength(3.0F, 1200.0F)
-            .sound(SoundType.COPPER)
-            .requiresCorrectToolForDrops();
+            .mapColor(MapColor.WOOD)
+            .strength(2.5F, 1200.0F)
+            .sound(SoundType.WOOD)
+            .noOcclusion();
         //? if >=26.1 {
         properties = properties.setId(key);
         //?}

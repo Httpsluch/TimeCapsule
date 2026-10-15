@@ -6,24 +6,35 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
- * The capsule block. Logic lives in {@link CapsuleBlockEntity}; the block only routes
- * interactions to it. SEALED is a block state so clients know a capsule can't be broken.
+ * The capsule block, a chest-sized box facing the player who placed it. Logic lives in
+ * {@link CapsuleBlockEntity}; the block only routes interactions to it. SEALED is a block state
+ * so clients know a capsule can't be broken, and so the model can show the padlock.
+ * <p>
+ * The facing property is used through {@link BlockStateProperties#HORIZONTAL_FACING} directly
+ * because its Java type changed in 26.1.
  */
 public class CapsuleBlock extends BaseEntityBlock {
     public static final BooleanProperty SEALED = BooleanProperty.create("sealed");
+    private static final VoxelShape SHAPE = Block.box(1.0, 0.0, 1.0, 15.0, 14.0, 15.0);
 
     //? if >=1.21 && <26.3 {
     /*public static final com.mojang.serialization.MapCodec<CapsuleBlock> CODEC = simpleCodec(CapsuleBlock::new);
@@ -36,12 +47,34 @@ public class CapsuleBlock extends BaseEntityBlock {
 
     public CapsuleBlock(BlockBehaviour.Properties properties) {
         super(properties);
-        registerDefaultState(this.stateDefinition.any().setValue(SEALED, false));
+        registerDefaultState(this.stateDefinition.any()
+            .setValue(BlockStateProperties.HORIZONTAL_FACING, net.minecraft.core.Direction.NORTH)
+            .setValue(SEALED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(SEALED);
+        builder.add(BlockStateProperties.HORIZONTAL_FACING, SEALED);
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, context.getHorizontalDirection().getOpposite());
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(BlockStateProperties.HORIZONTAL_FACING, rotation.rotate(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE;
     }
 
     @Override
