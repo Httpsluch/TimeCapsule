@@ -11,6 +11,11 @@
   ],
 
 
+  "contact": {
+    "homepage": "https://modrinth.com/mod/time-capsule",
+    "sources": "https://github.com/Httpsluch/TimeCapsule",
+    "issues": "https://github.com/Httpsluch/TimeCapsule/issues"
+  },
   "license": "MIT",
   "icon": "assets/${id}/icon.png",
 

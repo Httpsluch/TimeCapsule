@@ -89,6 +89,10 @@ public class CapsuleBlockEntity extends BlockEntity implements MenuProvider {
 
     /** Placing a capsule makes the placer its owner and opens the setup screen right away. */
     public void onPlaced(ServerPlayer player) {
+        // A creative-mode copy (pick block with data) can carry a sealed or opened state; leave those alone.
+        if (state != STATE_SETUP) {
+            return;
+        }
         owner = player.getUUID();
         ownerName = player.getName().getString();
         setChanged();
@@ -182,7 +186,8 @@ public class CapsuleBlockEntity extends BlockEntity implements MenuProvider {
     /** {days, hours, minutes, raw units left}; units are millis or ticks depending on the mode. */
     private long[] remaining() {
         if (mode == MODE_REAL_WORLD) {
-            long left = Math.max(0L, unlockAt - System.currentTimeMillis());
+            // A clock set backwards never shows more than the full timer.
+            long left = Math.max(0L, unlockAt - Math.max(System.currentTimeMillis(), sealedAt));
             return new long[] {left / MILLIS_PER_DAY, left % MILLIS_PER_DAY / MILLIS_PER_HOUR, left % MILLIS_PER_HOUR / MILLIS_PER_MINUTE, left};
         }
         // /time set can move the clock backwards; never report more than the full timer.

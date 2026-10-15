@@ -54,6 +54,8 @@ modSettings {
             "minecraftVersionVirtual" to stonecutter.current.version,
             "fabricMinecraftRange" to project.mod.prop("fabric_mc_range"),
             "forgeMinecraftRange" to project.mod.prop("forge_mc_range"),
+            // Only the Forge jars ship pack.mcmeta; its format fields changed in 1.20.2 and again in 1.21.9.
+            "packMcmetaFormats" to project.mod.prop("pack_mcmeta_formats"),
             "forgeLoaderVersion" to
                 if (project.mod.isForge) {
                     project.mod
@@ -70,7 +72,8 @@ modSettings {
 publishMods {
     modrinth {
         if (mod.isFabric) requires("fabric-api")
-        environment.set(CLIENT_OR_SERVER_PREFERS_BOTH)
+        // The block and its screen must exist on both sides.
+        environment.set(CLIENT_AND_SERVER)
     }
 
     curseforge {
