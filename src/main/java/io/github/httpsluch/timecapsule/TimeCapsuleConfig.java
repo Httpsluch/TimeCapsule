@@ -20,6 +20,7 @@ public final class TimeCapsuleConfig {
     public static int defaultDays = 7;
     public static int maxDays = 365;
     public static boolean announceOpen = true;
+    public static boolean animateLid = true;
 
     private TimeCapsuleConfig() {
     }
@@ -40,6 +41,7 @@ public final class TimeCapsuleConfig {
         maxDays = clamp(parseInt(props, "max_days", 365), 1, 3650);
         defaultDays = clamp(parseInt(props, "default_days", 7), 1, maxDays);
         announceOpen = Boolean.parseBoolean(props.getProperty("announce_open", "true").trim());
+        animateLid = Boolean.parseBoolean(props.getProperty("animate_lid", "true").trim());
 
         write(file);
         TimeCapsule.LOGGER.info("Time Capsule loaded: default timer {} for {} days (max {}), open announcements {}",
@@ -62,6 +64,9 @@ public final class TimeCapsuleConfig {
             "",
             "# Tell everyone in chat when a capsule is opened.",
             "announce_open=" + announceOpen,
+            "",
+            "# Open the lid while someone is looking inside (a block-state change, no per-tick work).",
+            "animate_lid=" + animateLid,
             "");
         try {
             Files.createDirectories(file.getParent());

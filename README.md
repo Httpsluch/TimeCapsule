@@ -50,7 +50,7 @@ iron   iron   iron
 4. Breaking a capsule keeps everything inside, like a shulker box. A sealed capsule stays sealed in item form, and its tooltip shows when it opens (date and time for real-world capsules, in-game time left otherwise).
 5. Once the time is up, the next right-click opens it (optionally announced in chat) and it works like a chest that keeps its contents when broken.
 
-Settings live in `config/timecapsule.properties`: default timer mode, default and maximum days, and the open announcement.
+Settings live in `config/timecapsule.properties`: default timer mode, default and maximum days, the open announcement, and the lid animation.
 
 ## Requirements
 

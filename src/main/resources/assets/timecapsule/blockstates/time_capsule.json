@@ -1,32 +1,92 @@
 {
   "variants": {
-    "facing=north,sealed=false": {
+    "facing=north,lid=0,sealed=false": {
       "model": "timecapsule:block/time_capsule"
     },
-    "facing=east,sealed=false": {
+    "facing=east,lid=0,sealed=false": {
       "model": "timecapsule:block/time_capsule",
       "y": 90
     },
-    "facing=south,sealed=false": {
+    "facing=south,lid=0,sealed=false": {
       "model": "timecapsule:block/time_capsule",
       "y": 180
     },
-    "facing=west,sealed=false": {
+    "facing=west,lid=0,sealed=false": {
       "model": "timecapsule:block/time_capsule",
       "y": 270
     },
-    "facing=north,sealed=true": {
+    "facing=north,lid=1,sealed=false": {
+      "model": "timecapsule:block/time_capsule_open_1"
+    },
+    "facing=east,lid=1,sealed=false": {
+      "model": "timecapsule:block/time_capsule_open_1",
+      "y": 90
+    },
+    "facing=south,lid=1,sealed=false": {
+      "model": "timecapsule:block/time_capsule_open_1",
+      "y": 180
+    },
+    "facing=west,lid=1,sealed=false": {
+      "model": "timecapsule:block/time_capsule_open_1",
+      "y": 270
+    },
+    "facing=north,lid=2,sealed=false": {
+      "model": "timecapsule:block/time_capsule_open_2"
+    },
+    "facing=east,lid=2,sealed=false": {
+      "model": "timecapsule:block/time_capsule_open_2",
+      "y": 90
+    },
+    "facing=south,lid=2,sealed=false": {
+      "model": "timecapsule:block/time_capsule_open_2",
+      "y": 180
+    },
+    "facing=west,lid=2,sealed=false": {
+      "model": "timecapsule:block/time_capsule_open_2",
+      "y": 270
+    },
+    "facing=north,lid=0,sealed=true": {
       "model": "timecapsule:block/time_capsule_sealed"
     },
-    "facing=east,sealed=true": {
+    "facing=east,lid=0,sealed=true": {
       "model": "timecapsule:block/time_capsule_sealed",
       "y": 90
     },
-    "facing=south,sealed=true": {
+    "facing=south,lid=0,sealed=true": {
       "model": "timecapsule:block/time_capsule_sealed",
       "y": 180
     },
-    "facing=west,sealed=true": {
+    "facing=west,lid=0,sealed=true": {
+      "model": "timecapsule:block/time_capsule_sealed",
+      "y": 270
+    },
+    "facing=north,lid=1,sealed=true": {
+      "model": "timecapsule:block/time_capsule_sealed"
+    },
+    "facing=east,lid=1,sealed=true": {
+      "model": "timecapsule:block/time_capsule_sealed",
+      "y": 90
+    },
+    "facing=south,lid=1,sealed=true": {
+      "model": "timecapsule:block/time_capsule_sealed",
+      "y": 180
+    },
+    "facing=west,lid=1,sealed=true": {
+      "model": "timecapsule:block/time_capsule_sealed",
+      "y": 270
+    },
+    "facing=north,lid=2,sealed=true": {
+      "model": "timecapsule:block/time_capsule_sealed"
+    },
+    "facing=east,lid=2,sealed=true": {
+      "model": "timecapsule:block/time_capsule_sealed",
+      "y": 90
+    },
+    "facing=south,lid=2,sealed=true": {
+      "model": "timecapsule:block/time_capsule_sealed",
+      "y": 180
+    },
+    "facing=west,lid=2,sealed=true": {
       "model": "timecapsule:block/time_capsule_sealed",
       "y": 270
     }

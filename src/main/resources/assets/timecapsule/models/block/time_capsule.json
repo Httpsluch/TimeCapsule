@@ -5,7 +5,8 @@
     "top": "timecapsule:block/time_capsule_top",
     "front": "timecapsule:block/time_capsule_front",
     "side": "timecapsule:block/time_capsule_side",
-    "bottom": "timecapsule:block/time_capsule_bottom"
+    "bottom": "timecapsule:block/time_capsule_bottom",
+    "inside": "timecapsule:block/time_capsule_inside"
   },
   "elements": [
     {
@@ -56,6 +57,15 @@
             16
           ],
           "texture": "#side"
+        },
+        "up": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": "#inside"
         },
         "down": {
           "uv": [
@@ -126,6 +136,15 @@
             15
           ],
           "texture": "#top"
+        },
+        "down": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": "#inside"
         }
       }
     }

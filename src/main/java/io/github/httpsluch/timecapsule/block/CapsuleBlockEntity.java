@@ -3,6 +3,8 @@ package io.github.httpsluch.timecapsule.block;
 import io.github.httpsluch.timecapsule.TimeCapsuleConfig;
 import io.github.httpsluch.timecapsule.TimeCapsuleContent;
 import io.github.httpsluch.timecapsule.menu.CapsuleMenu;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -79,6 +81,11 @@ public class CapsuleBlockEntity extends BlockEntity implements MenuProvider {
     private long unlockAt;
     private UUID owner;
     private String ownerName = "";
+    /**
+     * Players with the screen open; drives the lid and the open/close sounds. Not saved. Kept by id, not as a
+     * count, so a player who switches to spectator while looking inside still closes the lid.
+     */
+    private final Set<UUID> viewers = new HashSet<>();
 
     public CapsuleBlockEntity(BlockPos pos, BlockState blockState) {
         super(TimeCapsuleContent.BLOCK_ENTITY.get(), pos, blockState);
@@ -107,12 +114,14 @@ public class CapsuleBlockEntity extends BlockEntity implements MenuProvider {
                 if (canEdit(player)) {
                     player.openMenu(this);
                 } else {
+                    level.playSound(null, worldPosition, SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
                     overlay(player, Component.translatable("message.timecapsule.not_owner", ownerName));
                 }
             }
             case STATE_SEALED -> {
                 long[] left = remaining();
                 if (left[3] > 0) {
+                    level.playSound(null, worldPosition, SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
                     String key = mode == MODE_IN_GAME ? "message.timecapsule.locked_in_game" : "message.timecapsule.locked";
                     overlay(player, Component.translatable(key, CapsuleTexts.timeLeft(left[0], left[1], left[2])));
                 } else {
@@ -158,7 +167,9 @@ public class CapsuleBlockEntity extends BlockEntity implements MenuProvider {
             unlockAt = sealedAt + days * TICKS_PER_DAY;
         }
         setSealedState(true);
-        level.playSound(null, worldPosition, SoundEvents.CHEST_CLOSE, SoundSource.BLOCKS, 1.0F, 0.6F);
+        // A clunk and a lock click, distinct from the chest sounds.
+        level.playSound(null, worldPosition, SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, 0.7F, 0.8F);
+        level.playSound(null, worldPosition, SoundEvents.LODESTONE_COMPASS_LOCK, SoundSource.BLOCKS, 1.0F, 1.0F);
         player.closeContainer();
         overlay(player, Component.translatable("message.timecapsule.sealed", CapsuleTexts.days(days), CapsuleTexts.mode(mode)));
     }
@@ -173,6 +184,45 @@ public class CapsuleBlockEntity extends BlockEntity implements MenuProvider {
             server.getPlayerList().broadcastSystemMessage(Component.translatable("message.timecapsule.announce",
                 player.getDisplayName(), ownerName.isEmpty() ? "?" : ownerName,
                 CapsuleTexts.days(days), CapsuleTexts.mode(mode)), false);
+        }
+    }
+
+    // ---- Lid ---------------------------------------------------------------------------------
+
+    public void startOpen(Player player) {
+        // Spectators look inside unseen, like with vanilla chests.
+        if (level == null || isRemoved() || player.isSpectator()) {
+            return;
+        }
+        if (viewers.add(player.getUUID()) && viewers.size() == 1) {
+            level.playSound(null, worldPosition, SoundEvents.CHEST_OPEN, SoundSource.BLOCKS, 0.5F, 0.9F + level.getRandom().nextFloat() * 0.1F);
+            moveLid();
+        }
+    }
+
+    public void stopOpen(Player player) {
+        // A capsule broken while open must not touch the world again: setBlock would put the block back.
+        if (level == null || isRemoved()) {
+            return;
+        }
+        if (viewers.remove(player.getUUID()) && viewers.isEmpty()) {
+            if (state != STATE_SEALED) {
+                level.playSound(null, worldPosition, SoundEvents.CHEST_CLOSE, SoundSource.BLOCKS, 0.5F, 0.9F + level.getRandom().nextFloat() * 0.1F);
+            }
+            moveLid();
+        }
+    }
+
+    public boolean isOpenByPlayers() {
+        return !viewers.isEmpty();
+    }
+
+    /** Puts the lid half way and lets CapsuleBlock#tick finish the move two ticks later. */
+    private void moveLid() {
+        BlockState current = getBlockState();
+        if (TimeCapsuleConfig.animateLid && current.hasProperty(CapsuleBlock.LID) && level.getBlockEntity(worldPosition) == this) {
+            level.setBlock(worldPosition, current.setValue(CapsuleBlock.LID, 1), Block.UPDATE_ALL);
+            level.scheduleTick(worldPosition, current.getBlock(), 2);
         }
     }
 

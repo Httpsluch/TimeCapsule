@@ -48,6 +48,17 @@ public class CapsuleMenu extends AbstractContainerMenu {
             addSlot(new Slot(playerInventory, col, 8 + col * 18, INVENTORY_Y + 58));
         }
         addDataSlots(data);
+        if (capsule != null) {
+            capsule.startOpen(playerInventory.player);
+        }
+    }
+
+    @Override
+    public void removed(Player player) {
+        super.removed(player);
+        if (capsule != null) {
+            capsule.stopOpen(player);
+        }
     }
 
     public int getState() {
