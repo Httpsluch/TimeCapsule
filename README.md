@@ -13,6 +13,15 @@ This project uses [Stonecraft](https://stonecraft.meza.gg) to build for Fabric, 
 
 
 
+## Where to get it
+
+| Site | Project name |
+| --- | --- |
+| Modrinth | Time Capsule |
+| CurseForge | Sealed Time Capsule (an unrelated mod already uses "Time Capsule" there) |
+
+It's the same mod on both sites. In-game the mod and its block are both called **Time Capsule**, and the mod id is `timecapsule`.
+
 ## Targets
 
 | Minecraft | Fabric | Forge | NeoForge |
