@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -37,8 +36,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public class CapsuleBlock extends BaseEntityBlock {
     public static final BooleanProperty SEALED = BooleanProperty.create("sealed");
-    /** Lid position: 0 closed, 1 half open, 2 open. Stepped by one scheduled tick, so idle capsules never tick. */
-    public static final IntegerProperty LID = IntegerProperty.create("lid", 0, 2);
     private static final VoxelShape SHAPE = Block.box(1.0, 0.0, 1.0, 15.0, 14.0, 15.0);
 
     //? if >=1.21 && <26.3 {
@@ -54,13 +51,12 @@ public class CapsuleBlock extends BaseEntityBlock {
         super(properties);
         registerDefaultState(this.stateDefinition.any()
             .setValue(BlockStateProperties.HORIZONTAL_FACING, net.minecraft.core.Direction.NORTH)
-            .setValue(LID, 0)
             .setValue(SEALED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(BlockStateProperties.HORIZONTAL_FACING, LID, SEALED);
+        builder.add(BlockStateProperties.HORIZONTAL_FACING, SEALED);
     }
 
     @Override
@@ -78,12 +74,11 @@ public class CapsuleBlock extends BaseEntityBlock {
         return state.rotate(mirror.getRotation(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
     }
 
-    /** Second step of the lid animation: finish opening while someone is looking inside, otherwise close. */
+    /** Scheduled once when a capsule is sealed, so the sealed model appears after the lid has swung shut. */
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        int target = level.getBlockEntity(pos) instanceof CapsuleBlockEntity capsule && capsule.isOpenByPlayers() ? 2 : 0;
-        if (state.getValue(LID) != target) {
-            level.setBlock(pos, state.setValue(LID, target), Block.UPDATE_ALL);
+        if (level.getBlockEntity(pos) instanceof CapsuleBlockEntity capsule) {
+            capsule.syncSealedState();
         }
     }
 

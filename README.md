@@ -45,7 +45,7 @@ iron   iron   iron
 ```
 
 1. Placing a Time Capsule makes you its owner and opens the setup screen. It faces you, like a chest.
-2. Choose **Real-world days** or **In-game days**, set the number of days, add items and written books, then press **Seal capsule**.
+2. Choose **Real-world days** or **In-game days**, set the number of days, add items and written books, then press **Seal capsule**. An empty capsule can't be sealed.
 3. While sealed, right-clicking shows the time left.
 4. Breaking a capsule keeps everything inside, like a shulker box. A sealed capsule stays sealed in item form, and its tooltip shows when it opens (date and time for real-world capsules, in-game time left otherwise).
 5. Once the time is up, the next right-click opens it (optionally announced in chat) and it works like a chest that keeps its contents when broken.

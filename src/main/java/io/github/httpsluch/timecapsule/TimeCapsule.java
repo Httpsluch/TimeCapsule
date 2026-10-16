@@ -84,6 +84,7 @@ public class TimeCapsule /*? if fabric {*/ implements ModInitializer /*?}*/ {
         modBus.addListener(TimeCapsule::onBuildCreativeTabs);
         if (FMLEnvironment.dist.isClient()) {
             modBus.addListener(TimeCapsuleClient::onClientSetup);
+            modBus.addListener(TimeCapsuleClient::onRegisterRenderers);
         }
     }
     *///?}
@@ -98,6 +99,7 @@ public class TimeCapsule /*? if fabric {*/ implements ModInitializer /*?}*/ {
         BuildCreativeModeTabContentsEvent.BUS.addListener(TimeCapsule::onBuildCreativeTabs);
         if (FMLEnvironment.dist.isClient()) {
             FMLClientSetupEvent.getBus(modBus).addListener(TimeCapsuleClient::onClientSetup);
+            net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers.BUS.addListener(TimeCapsuleClient::onRegisterRenderers);
         }
     }
     *///?}
@@ -119,6 +121,7 @@ public class TimeCapsule /*? if fabric {*/ implements ModInitializer /*?}*/ {
         modEventBus.addListener(TimeCapsule::onBuildCreativeTabs);
         if (isClient()) {
             modEventBus.addListener(TimeCapsuleClient::onRegisterScreens);
+            modEventBus.addListener(TimeCapsuleClient::onRegisterRenderers);
         }
     }
 

@@ -81,6 +81,16 @@ public class CapsuleMenu extends AbstractContainerMenu {
         return getState() == CapsuleBlockEntity.STATE_SETUP;
     }
 
+    /** Whether any capsule slot holds an item; synced to the client with the slots. */
+    public boolean hasItems() {
+        for (int i = 0; i < CapsuleBlockEntity.SIZE; i++) {
+            if (!slots.get(i).getItem().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** Items can move in and out unless the capsule is sealed. */
     public boolean isUnlocked() {
         return getState() != CapsuleBlockEntity.STATE_SEALED;

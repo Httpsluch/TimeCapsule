@@ -24,5 +24,8 @@
   "tooltip.timecapsule.opens_in_game": "Opens in %s of in-game time",
   "tooltip.timecapsule.opens_after": "Opens after %s of in-game time",
   "tooltip.timecapsule.ready": "Ready to open!",
-  "tooltip.timecapsule.secret": "What's inside stays secret until it opens"
+  "tooltip.timecapsule.secret": "What's inside stays secret until it opens",
+  "gui.timecapsule.seal_empty": "Put something inside first",
+  "message.timecapsule.empty": "Put something inside before sealing it.",
+  "subtitles.timecapsule.block.time_capsule.locked": "Time Capsule locked"
 }

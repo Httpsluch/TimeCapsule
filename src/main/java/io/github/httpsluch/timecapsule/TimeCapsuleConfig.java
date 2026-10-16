@@ -65,7 +65,7 @@ public final class TimeCapsuleConfig {
             "# Tell everyone in chat when a capsule is opened.",
             "announce_open=" + announceOpen,
             "",
-            "# Open the lid while someone is looking inside (a block-state change, no per-tick work).",
+            "# Swing the lid open like a chest's while someone is looking inside.",
             "animate_lid=" + animateLid,
             "");
         try {

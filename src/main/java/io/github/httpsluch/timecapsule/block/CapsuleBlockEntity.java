@@ -60,6 +60,11 @@ public class CapsuleBlockEntity extends BlockEntity implements MenuProvider {
     public static final int BUTTON_DAYS_PLUS_10 = 4;
     public static final int BUTTON_SEAL = 5;
 
+    /** Block event that swings the lid on clients; the parameter is 1 to open and 0 to close. */
+    public static final int EVENT_LID = 1;
+    /** Ticks a full lid swing takes, like a vanilla chest's. */
+    public static final int LID_TICKS = 10;
+
     private static final long MILLIS_PER_DAY = 86_400_000L;
     private static final long MILLIS_PER_HOUR = 3_600_000L;
     private static final long MILLIS_PER_MINUTE = 60_000L;
@@ -86,6 +91,12 @@ public class CapsuleBlockEntity extends BlockEntity implements MenuProvider {
      * count, so a player who switches to spectator while looking inside still closes the lid.
      */
     private final Set<UUID> viewers = new HashSet<>();
+
+    // Client-side lid animation, started by EVENT_LID like a vanilla chest's. Nothing ticks: the renderer
+    // works the angle out from the time of the last event.
+    private boolean lidOpening;
+    private float lidFrom;
+    private long lidEventTime;
 
     public CapsuleBlockEntity(BlockPos pos, BlockState blockState) {
         super(TimeCapsuleContent.BLOCK_ENTITY.get(), pos, blockState);
@@ -114,14 +125,14 @@ public class CapsuleBlockEntity extends BlockEntity implements MenuProvider {
                 if (canEdit(player)) {
                     player.openMenu(this);
                 } else {
-                    level.playSound(null, worldPosition, SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    level.playSound(null, worldPosition, TimeCapsuleContent.LOCKED_SOUND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
                     overlay(player, Component.translatable("message.timecapsule.not_owner", ownerName));
                 }
             }
             case STATE_SEALED -> {
                 long[] left = remaining();
                 if (left[3] > 0) {
-                    level.playSound(null, worldPosition, SoundEvents.CHEST_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    level.playSound(null, worldPosition, TimeCapsuleContent.LOCKED_SOUND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
                     String key = mode == MODE_IN_GAME ? "message.timecapsule.locked_in_game" : "message.timecapsule.locked";
                     overlay(player, Component.translatable(key, CapsuleTexts.timeLeft(left[0], left[1], left[2])));
                 } else {
@@ -144,7 +155,13 @@ public class CapsuleBlockEntity extends BlockEntity implements MenuProvider {
             case BUTTON_DAYS_MINUS_1 -> days = clampDays(days - 1);
             case BUTTON_DAYS_PLUS_1 -> days = clampDays(days + 1);
             case BUTTON_DAYS_PLUS_10 -> days = clampDays(days + 10);
-            case BUTTON_SEAL -> seal(player);
+            case BUTTON_SEAL -> {
+                if (items.isEmpty()) {
+                    overlay(player, Component.translatable("message.timecapsule.empty"));
+                    return false;
+                }
+                seal(player);
+            }
             default -> {
                 return false;
             }
@@ -166,7 +183,8 @@ public class CapsuleBlockEntity extends BlockEntity implements MenuProvider {
             sealedAt = overworldTime();
             unlockAt = sealedAt + days * TICKS_PER_DAY;
         }
-        setSealedState(true);
+        // The padlock and glowing clock appear once the lid has swung shut (CapsuleBlock#tick).
+        level.scheduleTick(worldPosition, getBlockState().getBlock(), TimeCapsuleConfig.animateLid ? LID_TICKS + 2 : 1);
         // A clunk and a lock click, distinct from the chest sounds.
         level.playSound(null, worldPosition, SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, 0.7F, 0.8F);
         level.playSound(null, worldPosition, SoundEvents.LODESTONE_COMPASS_LOCK, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -196,7 +214,7 @@ public class CapsuleBlockEntity extends BlockEntity implements MenuProvider {
         }
         if (viewers.add(player.getUUID()) && viewers.size() == 1) {
             level.playSound(null, worldPosition, SoundEvents.CHEST_OPEN, SoundSource.BLOCKS, 0.5F, 0.9F + level.getRandom().nextFloat() * 0.1F);
-            moveLid();
+            sendLidEvent(true);
         }
     }
 
@@ -209,21 +227,49 @@ public class CapsuleBlockEntity extends BlockEntity implements MenuProvider {
             if (state != STATE_SEALED) {
                 level.playSound(null, worldPosition, SoundEvents.CHEST_CLOSE, SoundSource.BLOCKS, 0.5F, 0.9F + level.getRandom().nextFloat() * 0.1F);
             }
-            moveLid();
+            sendLidEvent(false);
         }
     }
 
-    public boolean isOpenByPlayers() {
-        return !viewers.isEmpty();
+    /** Tells nearby clients to swing the lid, the way a chest reports its open count. */
+    private void sendLidEvent(boolean open) {
+        if (TimeCapsuleConfig.animateLid && level.getBlockEntity(worldPosition) == this) {
+            level.blockEvent(worldPosition, getBlockState().getBlock(), EVENT_LID, open ? 1 : 0);
+        }
     }
 
-    /** Puts the lid half way and lets CapsuleBlock#tick finish the move two ticks later. */
-    private void moveLid() {
-        BlockState current = getBlockState();
-        if (TimeCapsuleConfig.animateLid && current.hasProperty(CapsuleBlock.LID) && level.getBlockEntity(worldPosition) == this) {
-            level.setBlock(worldPosition, current.setValue(CapsuleBlock.LID, 1), Block.UPDATE_ALL);
-            level.scheduleTick(worldPosition, current.getBlock(), 2);
+    @Override
+    public boolean triggerEvent(int id, int param) {
+        if (id != EVENT_LID) {
+            return super.triggerEvent(id, param);
         }
+        // Runs on the server too, where returning true is what sends the event to clients.
+        if (level != null && level.isClientSide()) {
+            long now = level.getGameTime();
+            lidFrom = linearOpenness(now - lidEventTime);
+            lidOpening = param == 1;
+            lidEventTime = now;
+        }
+        return true;
+    }
+
+    /** How far the lid is open, 0 to 1, eased like a vanilla chest lid. Client side; used by the renderer. */
+    public float lidOpenness(float partialTick) {
+        if (level == null) {
+            return 0.0F;
+        }
+        float closed = 1.0F - linearOpenness(level.getGameTime() - lidEventTime + partialTick);
+        return 1.0F - closed * closed * closed;
+    }
+
+    private float linearOpenness(float ticksSinceEvent) {
+        float moved = ticksSinceEvent / LID_TICKS;
+        return lidOpening ? Math.min(1.0F, lidFrom + moved) : Math.max(0.0F, lidFrom - moved);
+    }
+
+    /** Brings the block's sealed look in line with the capsule; see {@link CapsuleBlock#tick}. */
+    public void syncSealedState() {
+        setSealedState(state == STATE_SEALED);
     }
 
     private void setSealedState(boolean sealed) {

@@ -6,6 +6,7 @@ import io.github.httpsluch.timecapsule.menu.CapsuleMenu;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -29,6 +30,8 @@ public class CapsuleScreen extends AbstractContainerScreen<CapsuleMenu> {
 
     private final List<Button> controls = new ArrayList<>();
     private Button modeButton;
+    private Button sealButton;
+    private Tooltip emptyTooltip;
 
     public CapsuleScreen(CapsuleMenu menu, Inventory inventory, Component title) {
         //? if >=26.1 {
@@ -51,7 +54,8 @@ public class CapsuleScreen extends AbstractContainerScreen<CapsuleMenu> {
         addControl(x + 26, 66, 20, Component.literal("<"), CapsuleBlockEntity.BUTTON_DAYS_MINUS_1);
         addControl(x + 114, 66, 20, Component.literal(">"), CapsuleBlockEntity.BUTTON_DAYS_PLUS_1);
         addControl(x + 136, 66, 24, Component.literal(">>"), CapsuleBlockEntity.BUTTON_DAYS_PLUS_10);
-        addControl(x, 90, 160, Component.translatable("gui.timecapsule.seal"), CapsuleBlockEntity.BUTTON_SEAL);
+        sealButton = addControl(x, 90, 160, Component.translatable("gui.timecapsule.seal"), CapsuleBlockEntity.BUTTON_SEAL);
+        emptyTooltip = Tooltip.create(Component.translatable("gui.timecapsule.seal_empty"));
         updateControls();
     }
 
@@ -75,6 +79,11 @@ public class CapsuleScreen extends AbstractContainerScreen<CapsuleMenu> {
         boolean editing = editing();
         for (Button button : controls) {
             button.visible = editing;
+        }
+        if (sealButton != null && sealButton.active != menu.hasItems()) {
+            // Only empty capsules: there is nothing to keep until someone puts something in.
+            sealButton.active = menu.hasItems();
+            sealButton.setTooltip(sealButton.active ? null : emptyTooltip);
         }
         if (modeButton != null) {
             modeButton.setMessage(Component.translatable("gui.timecapsule.mode", CapsuleTexts.mode(menu.getMode())));

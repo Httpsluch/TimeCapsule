@@ -8,6 +8,7 @@ import io.github.httpsluch.timecapsule.platform.Registrar;
 import java.util.function.Supplier;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
@@ -24,6 +25,8 @@ public final class TimeCapsuleContent {
     public static Supplier<BlockItem> ITEM;
     public static Supplier<BlockEntityType<CapsuleBlockEntity>> BLOCK_ENTITY;
     public static Supplier<MenuType<CapsuleMenu>> MENU;
+    /** Played when someone tries a capsule they can't open yet. */
+    public static Supplier<SoundEvent> LOCKED_SOUND;
 
     private TimeCapsuleContent() {
     }
@@ -33,6 +36,8 @@ public final class TimeCapsuleContent {
         ITEM = registrar.register(BuiltInRegistries.ITEM, "time_capsule", key -> new CapsuleItem(BLOCK.get(), itemProperties(key)));
         BLOCK_ENTITY = registrar.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, "time_capsule", key -> blockEntityType());
         MENU = registrar.register(BuiltInRegistries.MENU, "time_capsule", key -> new MenuType<CapsuleMenu>(CapsuleMenu::new, FeatureFlags.VANILLA_SET));
+        LOCKED_SOUND = registrar.register(BuiltInRegistries.SOUND_EVENT, "block.time_capsule.locked",
+            key -> SoundEvent.createVariableRangeEvent(TimeCapsule.id("block.time_capsule.locked")));
     }
 
     private static BlockBehaviour.Properties blockProperties(ResourceKey<Block> key) {

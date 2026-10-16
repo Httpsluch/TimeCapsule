@@ -1,0 +1,8 @@
+{
+  "block.time_capsule.locked": {
+    "subtitle": "subtitles.timecapsule.block.time_capsule.locked",
+    "sounds": [
+      "timecapsule:block/time_capsule/locked"
+    ]
+  }
+}
