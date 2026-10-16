@@ -376,7 +376,22 @@ public class CapsuleBlockEntity extends BlockEntity implements MenuProvider {
         *///?} else {
         /*net.minecraft.world.item.BlockItem.setBlockEntityData(stack, getType(), saveWithoutMetadata());
         *///?}
+        if (state == STATE_SEALED) {
+            markSealed(stack);
+        }
         return stack;
+    }
+
+    /** Sealed capsule items show the padlock and the animated clock; see models/item and items/time_capsule.json. */
+    private static void markSealed(ItemStack stack) {
+        //? if >=26.1 {
+        stack.set(net.minecraft.core.component.DataComponents.CUSTOM_MODEL_DATA, new net.minecraft.world.item.component.CustomModelData(
+            java.util.List.of(), java.util.List.of(true), java.util.List.of(), java.util.List.of()));
+        //?} elif >=1.21 {
+        /*stack.set(net.minecraft.core.component.DataComponents.CUSTOM_MODEL_DATA, new net.minecraft.world.item.component.CustomModelData(1));
+        *///?} else {
+        /*stack.getOrCreateTag().putInt("CustomModelData", 1);
+        *///?}
     }
 
     private static void overlay(ServerPlayer player, Component message) {

@@ -8,7 +8,7 @@ First release.
 - **Pick it up like a shulker box:** breaking a capsule keeps everything inside. A sealed capsule stays sealed, so you can move it, or hide it for someone else to find, but nobody can open it early.
 - **The item's tooltip shows when it opens:** the date and time for real-world capsules (in your own time zone), or the in-game time left. What's inside stays secret.
 - **When the time is up,** the next right-click opens the capsule, with an optional chat announcement. After that it works like a chest that keeps its contents when broken.
-- **Animated lid and clock:** the lid swings open and shut like a chest's while someone is looking inside, and a sealed capsule's clock face ticks.
+- **Animated lid and clock:** the lid swings open and shut like a chest's while someone is looking inside. Only sealed capsules have the glowing, ticking clock, both placed and in your inventory.
 - **Sounds:** chest sounds when opening and closing, a heavy lock sound when sealing, and its own clockwork rattle when someone tries a capsule they can't open yet.
 - Capsules can't be put inside other capsules, and an empty capsule can't be sealed.
 - **Settings** in `config/timecapsule.properties`: default timer mode, default and maximum days, the open announcement, and the lid animation.
