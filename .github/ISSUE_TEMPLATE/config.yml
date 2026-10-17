@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security problem
+    url: https://github.com/Httpsluch/TimeCapsule/security/advisories/new
+    about: Exploits such as opening capsules early or duplicating items. Reported privately.
+  - name: Download Time Capsule
+    url: https://modrinth.com/mod/time-capsule
+    about: The Modrinth page. It's also on CurseForge as Sealed Time Capsule.

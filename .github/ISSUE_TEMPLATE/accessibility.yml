@@ -1,0 +1,33 @@
+name: Accessibility problem
+description: Something makes Time Capsule hard to use with your setup.
+labels: [accessibility]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for telling us. See [ACCESSIBILITY.md](https://github.com/Httpsluch/TimeCapsule/blob/main/ACCESSIBILITY.md) for what works today and the known limits.
+  - type: textarea
+    id: barrier
+    attributes:
+      label: What got in the way?
+    validations:
+      required: true
+  - type: textarea
+    id: setup
+    attributes:
+      label: What do you use to play?
+      description: For example the Narrator, a large GUI scale, a high-contrast resource pack, a colorblind filter, or a controller mod.
+  - type: textarea
+    id: helps
+    attributes:
+      label: What would help?
+  - type: dropdown
+    id: minecraft
+    attributes:
+      label: Minecraft version
+      options: ["26.3", "26.2", "26.1.2", "1.21.1", "1.20.1"]
+  - type: dropdown
+    id: loader
+    attributes:
+      label: Mod loader
+      options: [Fabric, Forge, NeoForge]

@@ -1,0 +1,61 @@
+name: Bug report
+description: Something in Time Capsule doesn't work the way it should.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping fix Time Capsule! Found a way to open capsules early or duplicate items on a server? Please report it privately instead: see the [security policy](https://github.com/Httpsluch/TimeCapsule/security/policy).
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you see, and what did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Place a Time Capsule
+        2. ...
+    validations:
+      required: true
+  - type: dropdown
+    id: minecraft
+    attributes:
+      label: Minecraft version
+      options: ["26.3", "26.2", "26.1.2", "1.21.1", "1.20.1"]
+    validations:
+      required: true
+  - type: dropdown
+    id: loader
+    attributes:
+      label: Mod loader
+      options: [Fabric, Forge, NeoForge]
+    validations:
+      required: true
+  - type: input
+    id: mod-version
+    attributes:
+      label: Time Capsule version
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where does it happen?
+      options: [Single player, Multiplayer server, Both]
+  - type: textarea
+    id: other-mods
+    attributes:
+      label: Other mods
+      description: List your other mods, or write "none".
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log or crash report
+      description: Paste `logs/latest.log` or the crash report, or a link to it (for example on mclo.gs).
+      render: shell

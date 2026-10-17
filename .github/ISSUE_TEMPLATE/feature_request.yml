@@ -1,0 +1,21 @@
+name: Feature idea
+description: Suggest something new for Time Capsule.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like?
+    validations:
+      required: true
+  - type: textarea
+    id: use
+    attributes:
+      label: How would you use it?
+      description: For example on an SMP server, in a long survival world, or for a treasure hunt.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Anything you've tried instead?

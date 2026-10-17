@@ -52,6 +52,10 @@ iron   iron   iron
 
 Settings live in `config/timecapsule.properties`: default timer mode, default and maximum days, the open announcement, and the lid animation.
 
+## Contributing
+
+Bug reports, ideas, translations and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md), the [code of conduct](CODE_OF_CONDUCT.md), the [security policy](SECURITY.md) and the [accessibility statement](ACCESSIBILITY.md).
+
 ## Requirements
 
 - JDK 25
